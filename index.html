@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Bolinha</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Pegue a Bolinha!</h1>
+  <div id="game-area">
+    <div id="ball"></div>
+  </div>
+  <div id="info">
+    <p id="score">Pontuação: 0</p>
+    <p id="timer">Tempo: 10s</p>
+  </div>
+  <button id="start-btn">Iniciar Jogo</button>
+  <button id="open-btn" style="display: none;">APENAS ABRA</button>
+
+  <script>
+    let score = 0;
+    let timeLeft = 10;
+    let gameInterval;
+    let timerInterval;
+
+    const ball = document.getElementById('ball');
+    const scoreDisplay = document.getElementById('score');
+    const timerDisplay = document.getElementById('timer');
+    const startButton = document.getElementById('start-btn');
+    const openButton = document.getElementById('open-btn');
+    const gameArea = document.getElementById('game-area');
+
+    function startGame() {
+      score = 0;
+      timeLeft = 10;
+      scoreDisplay.textContent = `Pontuação: ${score}`;
+      timerDisplay.textContent = `Tempo: ${timeLeft}s`;
+      ball.style.display = 'block';
+      startButton.disabled = true;
+      openButton.style.display = 'none';
+
+      // Atualizar o timer
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Tempo: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+
+      // Movimentar a bolinha
+      gameInterval = setInterval(moveBall, 700);
+    }
+
+    function moveBall() {
+      const areaWidth = gameArea.clientWidth;
+      const areaHeight = gameArea.clientHeight;
+
+      const ballWidth = ball.offsetWidth;
+      const ballHeight = ball.offsetHeight;
+
+      const randomX = Math.random() * (areaWidth - ballWidth);
+      const randomY = Math.random() * (areaHeight - ballHeight);
+
+      ball.style.left = `${randomX}px`;
+      ball.style.top = `${randomY}px`;
+    }
+
+    function clickBall() {
+      score++;
+      scoreDisplay.textContent = `Pontuação: ${score}`;
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+      clearInterval(gameInterval);
+      ball.style.display = 'none';
+      startButton.disabled = false;
+      openButton.style.display = 'block';
+    }
+
+    function openMessage() {
+      window.location.href = 'message.html';
+    }
+
+    ball.addEventListener('click', clickBall);
+    startButton.addEventListener('click', startGame);
+    openButton.addEventListener('click', openMessage);
+  </script>
+</body>
+</html>
